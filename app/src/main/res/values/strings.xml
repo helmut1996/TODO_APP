@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Todo-App</string>
+    <string name="title">TODO APP\n</string>
+    <string name="btn_add">Crear tarea</string>
+    <string name="text_item">Title</string>
+    <string name="text_item2">Description</string>
+    <string name="text_item3">Date</string>
+    <string name="dialog_text">Nueva Tarea</string>
+    <string name="edTaskTitle">Nueva Tarea</string>
+    <string name="edTaskDesc">Descripcion Tarea</string>
+    <string name="btn_save">Guardar Tarea </string>
+    <string name="btn_update">Actualizar Tarea</string>
+    <string name="dialog_text2">Actualizar Tarea</string>
+    <string name="loading">Cargando</string>
+</resources>
