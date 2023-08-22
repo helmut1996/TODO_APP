@@ -9,10 +9,12 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.helcode.todo_app.adapters.TaskRecyclerViewAdapter
 import com.helcode.todo_app.adapters.TaskRecyclerViewBindingAdapter
+import com.helcode.todo_app.adapters.TaskRecyclerViewBindingDiffUtildapter
 import com.helcode.todo_app.databinding.ActivityMainBinding
 import com.helcode.todo_app.models.Task
 import com.helcode.todo_app.utils.SetupDialog
@@ -176,7 +178,7 @@ class MainActivity : AppCompatActivity() {
 
 
         ///delete or update
-        val taskRecyclerViewAdapter = TaskRecyclerViewBindingAdapter { type,
+        val taskRecyclerViewAdapter = TaskRecyclerViewBindingDiffUtildapter { type,
                                                                 position,
                                                                 task ->
             if (type == "delete") {
@@ -244,11 +246,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         mainBinding.recycler.adapter = taskRecyclerViewAdapter
+        taskRecyclerViewAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver()
+        {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                super.onItemRangeInserted(positionStart, itemCount)
+                mainBinding.recycler.smoothScrollToPosition(positionStart)
+            }
+        })
         callGetTaskList(taskRecyclerViewAdapter)
     }
 
 
-    private fun callGetTaskList(taskRecyclerViewAdapter: TaskRecyclerViewBindingAdapter) {
+    private fun callGetTaskList(taskRecyclerViewAdapter: TaskRecyclerViewBindingDiffUtildapter) {
         loadingTaskDialog.show()
         CoroutineScope(Dispatchers.Main).launch {
 
@@ -261,7 +270,7 @@ class MainActivity : AppCompatActivity() {
                     Status.SUCCESS -> {
                         it.data?.collect { taskList ->
                             loadingTaskDialog.dismiss()
-                            taskRecyclerViewAdapter.addAllTask(taskList)
+                            taskRecyclerViewAdapter.submitList(taskList)
                         }
                     }
 
